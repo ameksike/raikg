@@ -13,10 +13,13 @@ server.use(
         next()
     }
 );
-// add routing scheme
+// add routing list
 server.set([
+    /**
+     * @descriotion path /demo_1 for (GET,POST,PUT,DELETE,PATCH)
+     */
     {
-        path: '/api',
+        path: '/demo_1',
         handler: (req, res, next) => {
             res.send({
                 query: req.query,
@@ -24,8 +27,12 @@ server.set([
                 pathname: req.pathname,
             });
         }
-    }, {
-        path: '/demo',
+    }, 
+    /**
+     * @descriotion path /demo_2 only POST
+     */
+    {
+        path: '/demo_2',
         method: 'post',
         handler: (req, res, next) => {
             res.send({
@@ -33,6 +40,16 @@ server.set([
                 body: req.body,
                 pathname: req.pathname,
             });
+        }
+    },
+    /**
+     * @descriotion In case the URL does not match
+     */
+    {
+        path: '404',
+        handler: (req, res, next) => {
+            res.writeHead(404, { 'Content-Type': 'text/plain' });
+            res.end('Page not founds');
         }
     }
 ])
