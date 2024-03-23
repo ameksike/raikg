@@ -40,6 +40,27 @@ declare class RaikgServer extends RaikgServer_base {
      */
     router: Router;
     /**
+     * @description configure the web server
+     * @param {Object} [payload]
+     * @param {Object} [payload.web]
+     * @param {Object} [payload.drv]
+     * @param {Object} [payload.logger]
+     * @param {Object} [payload.helper]
+     * @param {Object} [payload.option]
+     * @param {Object} [payload.static]
+     * @param {Boolean} [payload.cookie]
+     * @returns {Promise<RaikgServer>} self
+     */
+    configure(payload?: {
+        web?: any;
+        drv?: any;
+        logger?: any;
+        helper?: any;
+        option?: any;
+        static?: any;
+        cookie?: boolean;
+    }): Promise<RaikgServer>;
+    /**
      * @description set a route
      * @param {TRoute|Array<TRoute>} payload
      */

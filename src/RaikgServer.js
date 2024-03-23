@@ -2,6 +2,8 @@ const ksmf = require('ksmf');
 const Router = require('./Router');
 const mwReqURL = require('./middleware/ReqURL');
 const mwResJSON = require('./middleware/ResJSON');
+const mwReqBody = require('./middleware/BodyParser');
+const mwReqForm = require('./middleware/FormParser');
 
 /**
  * @typedef {import("./types").TRoute} TRoute
@@ -44,6 +46,25 @@ class RaikgServer extends ksmf.server.Base {
             https: require('https'),
         };
         this.router = new Router();
+    }
+
+    /**
+     * @description configure the web server
+     * @param {Object} [payload]
+     * @param {Object} [payload.web]
+     * @param {Object} [payload.drv]
+     * @param {Object} [payload.logger]
+     * @param {Object} [payload.helper]
+     * @param {Object} [payload.option]
+     * @param {Object} [payload.static]
+     * @param {Boolean} [payload.cookie] 
+     * @returns {Promise<RaikgServer>} self
+     */
+    async configure(payload) {
+        super.configure(payload);
+        this.use(mwReqBody);
+        this.use(mwReqForm);
+        return this;
     }
 
     /**
