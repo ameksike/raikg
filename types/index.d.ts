@@ -4,6 +4,7 @@ declare class RaikgPlugin extends RaikgServer {
         Server: typeof RaikgServer;
         middleware: {
             body: (req: any, res: any, next: Function) => any;
+            form: (req: any, res: any, next: Function) => any;
         };
     };
 }
