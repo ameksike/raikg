@@ -96,7 +96,7 @@ class RaikgServer extends ksmf.server.Base {
                 if (!controller || (controller.method && controller.method.toUpperCase() !== req.method)) {
                     return this.onError(null, { req, res });
                 }
-                return await this.runMw(controller.handler, req, res);
+                return this.runMw(controller.handler, req, res);
             }
             catch (error) {
                 this.onError(null, { req, res, error });
