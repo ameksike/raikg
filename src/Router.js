@@ -18,6 +18,20 @@ class Router {
     }
 
     /**
+     * @description set a route
+     * @param {Object} payload 
+     */
+    add(payload) {
+        for (let i in payload) {
+            let controller = payload[i];
+            if (controller instanceof Function) {
+                controller = { handler: controller, path: i };
+            }
+            this.set(controller);
+        }
+    }
+
+    /**
      * 
      * @param {String} key 
      */

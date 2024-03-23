@@ -45,14 +45,20 @@ class RaikgServer extends ksmf.server.Base {
         this.router = new Router();
     }
 
-    runMw(mw, req, res) {
+    /**
+     * @description run middleware
+     * @param {TMiddleware} mw 
+     * @param {Object} req 
+     * @param {Object} res 
+     */
+    #runMw(mw, req, res) {
         return new Promise((next) => {
             try {
                 mw instanceof Function && mw(req, res, next);
             }
             catch (error) {
                 this.logger?.error({
-                    src: 'Raikge:runMw',
+                    src: 'Raikge:Run:Middleware',
                     error
                 });
                 next();
@@ -81,6 +87,14 @@ class RaikgServer extends ksmf.server.Base {
     }
 
     /**
+     * @description set a router config
+     * @param {Object} payload 
+     */
+    route(payload) {
+        this.router?.add(payload);
+    }
+
+    /**
      * @description start the server
      * @param {Object} [payload] 
      * @param {Number} [payload.port]
@@ -106,17 +120,18 @@ class RaikgServer extends ksmf.server.Base {
                     mwReqURL(req);
                     mwResJSON(res);
                     for (let middleware of this.middleware) {
-                        await this.runMw(middleware, req, res);
+                        await this.#runMw(middleware, req, res);
                     }
                     let controller = this.router.get(req.pathname);
+                    controller = controller || this.router.get(404);
                     if (!controller || (controller.method && controller.method.toUpperCase() !== req.method)) {
                         this.onError(null, { req, res });
-                        return reject({ req, res });
+                        return reject({ req, res, error });
                     }
-                    return this.runMw(controller.handler, req, res);
+                    return this.#runMw(controller.handler, req, res);
                 }
                 catch (error) {
-                    this.onError(null, { req, res, error });
+                    this.onError(null, { req, res });
                     return reject({ req, res, error });
                 }
             });
