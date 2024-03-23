@@ -33,7 +33,7 @@ class Router {
 
     /**
      * 
-     * @param {String} key 
+     * @param {String|Number} key 
      */
     get(key) {
         let controller = this.store[key];

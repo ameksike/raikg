@@ -10,8 +10,13 @@ declare class Router {
      */
     set(payload: import("./types").TRoute): void;
     /**
-     *
-     * @param {String} key
+     * @description set a route
+     * @param {Object} payload
      */
-    get(key: string): any;
+    add(payload: any): void;
+    /**
+     *
+     * @param {String|Number} key
+     */
+    get(key: string | number): any;
 }

@@ -5,6 +5,7 @@ const mwResJSON = require('./middleware/ResJSON');
 
 /**
  * @typedef {import("./types").TRoute} TRoute
+ * @typedef {import("./types").TMiddleware} TMiddleware
  */
 
 class RaikgServer extends ksmf.server.Base {
@@ -126,7 +127,7 @@ class RaikgServer extends ksmf.server.Base {
                     controller = controller || this.router.get(404);
                     if (!controller || (controller.method && controller.method.toUpperCase() !== req.method)) {
                         this.onError(null, { req, res });
-                        return reject({ req, res, error });
+                        return reject({ req, res });
                     }
                     return this.#runMw(controller.handler, req, res);
                 }
