@@ -1,12 +1,5 @@
-# Raikg
-Minimalist web server for Node.Js
 
-### Topics 
-- [Demo: Hello world](./doc/intro.hello_world.md)
-- [Demo: Simple](./doc/intro.demo.md)
-- [Demo: Server-Sent Events (SSE)](./doc/intro.demo.md)
 
-### Get started
 ```js
 // import the library 
 const Raikg = require("raikg");
