@@ -111,7 +111,7 @@ class RaikgServer extends ksmf.server.Base {
                     let controller = this.router.get(req.pathname);
                     if (!controller || (controller.method && controller.method.toUpperCase() !== req.method)) {
                         this.onError(null, { req, res });
-                        return reject({ req, res, error });
+                        return reject({ req, res });
                     }
                     return this.runMw(controller.handler, req, res);
                 }
