@@ -42,8 +42,7 @@ module.exports = function (req, res, next) {
                 // Check if part is a form field or a file
                 if (part.startsWith('Content-Disposition')) {
                     // Extract field name from content-disposition header
-                    //const match = part.match(/name='(.*)'[\r|\n]*(.*)/);
-                    const match = part.match(/name='([^']*)'[\r|\n|\s|;]*(.*)/)
+                    const match = part.match(/name=["|']([^']*)["|'][\r|\n|\s|;]*(.*)/);
                     if (match) {
                         formData[match[1]] = match[2];
                         if (part.includes('filename=')) {

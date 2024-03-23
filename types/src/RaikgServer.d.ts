@@ -1,5 +1,8 @@
 export = RaikgServer;
 declare const RaikgServer_base: typeof import("ksmf/types/src/server/BaseServer");
+/**
+ * @typedef {import("./types").TRoute} TRoute
+ */
 declare class RaikgServer extends RaikgServer_base {
     /**
      * @description configure the web server
@@ -38,9 +41,9 @@ declare class RaikgServer extends RaikgServer_base {
     runMw(mw: any, req: any, res: any): Promise<any>;
     /**
      * @description set a route
-     * @param {import("./types").TRoute} payload
+     * @param {TRoute|Array<TRoute>} payload
      */
-    set(payload: import("./types").TRoute): void;
+    set(payload: TRoute | Array<TRoute>): void;
     /**
      * @description start the server
      * @param {Object} [payload]
@@ -62,7 +65,11 @@ declare class RaikgServer extends RaikgServer_base {
         secure?: boolean;
         app?: any;
         callback?: Function;
-    }): Promise<void>;
+    }): Promise<any>;
     onError(callback: any, context?: any): any;
 }
+declare namespace RaikgServer {
+    export { TRoute };
+}
 import Router = require("./Router");
+type TRoute = import("./types").TRoute;

@@ -7,7 +7,8 @@
 
 /**
  * @typedef {Object} TRoute
- * @property {String} route
+ * @property {String} [path]
+ * @property {String} [route]
  * @property {String} [method]
  * @property {TMiddleware} handler
  * @property {Array<TMiddleware>} [middlewares]

@@ -14,7 +14,7 @@ class Router {
      * @param {import("./types").TRoute} payload 
      */
     set(payload) {
-        this.store[payload?.route || '/'] = payload;
+        this.store[payload?.path || payload?.route || '/'] = payload;
     }
 
     /**

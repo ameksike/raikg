@@ -3,6 +3,10 @@ const Router = require('./Router');
 const mwReqURL = require('./middleware/ReqURL');
 const mwResJSON = require('./middleware/ResJSON');
 
+/**
+ * @typedef {import("./types").TRoute} TRoute
+ */
+
 class RaikgServer extends ksmf.server.Base {
     /**
      * @type  {Object}
@@ -64,10 +68,16 @@ class RaikgServer extends ksmf.server.Base {
 
     /**
      * @description set a route
-     * @param {import("./types").TRoute} payload 
+     * @param {TRoute|Array<TRoute>} payload 
      */
     set(payload) {
-        this.router?.set(payload);
+        if (Array.isArray(payload)) {
+            for (let item of payload) {
+                this.router?.set(item);
+            }
+        } else {
+            this.router?.set(payload);
+        }
     }
 
     /**
@@ -83,28 +93,38 @@ class RaikgServer extends ksmf.server.Base {
      * @param {Function} [payload.callback] 
      */
     async start(payload = null) {
-        const protocol = this.driver[payload?.protocol] ? payload?.protocol : 'http';
+        const { key, cert, protocol = 'http', port = 3003, host = '127.0.0.1' } = payload || {};
+        const drv = this.driver[protocol];
         const options = {};
-        this.web = this.driver[protocol].createServer(options, async (req, res) => {
-            try {
-                mwReqURL(req);
-                mwResJSON(res);
-                for (let middleware of this.middleware) {
-                    await this.runMw(middleware, req, res);
+        if (protocol === 'https' && key && cert) {
+            options.key = key;
+            options.cert = cert;
+        }
+        return new Promise((resolve, reject) => {
+            this.web = drv.createServer(options, async (req, res) => {
+                try {
+                    mwReqURL(req);
+                    mwResJSON(res);
+                    for (let middleware of this.middleware) {
+                        await this.runMw(middleware, req, res);
+                    }
+                    let controller = this.router.get(req.pathname);
+                    if (!controller || (controller.method && controller.method.toUpperCase() !== req.method)) {
+                        this.onError(null, { req, res });
+                        return reject({ req, res, error });
+                    }
+                    return this.runMw(controller.handler, req, res);
                 }
-                let controller = this.router.get(req.pathname);
-                if (!controller || (controller.method && controller.method.toUpperCase() !== req.method)) {
-                    return this.onError(null, { req, res });
+                catch (error) {
+                    this.onError(null, { req, res, error });
+                    return reject({ req, res, error });
                 }
-                return this.runMw(controller.handler, req, res);
-            }
-            catch (error) {
-                this.onError(null, { req, res, error });
-            }
-        });
-        this.web.listen(payload?.port || 3333, () => {
-            console.log('Server running on http://localhost:3000');
-        });
+            });
+            this.web.listen(port, () => {
+                resolve({ port, host, protocol: 'http', url: `${protocol}://${host}:${port}`, provider: 'raikg' });
+            });
+        })
+
     }
 
     onError(callback, context = null) {
@@ -116,8 +136,10 @@ class RaikgServer extends ksmf.server.Base {
         } else {
             let status = context.error ? 500 : 404;
             let body = context?.error?.message || 'Page not found';
-            context.res.writeHead(status, { 'Content-Type': 'text/html' });
-            context.res.end(body);
+            if (!context.res.finished) {
+                context.res.writeHead(status, { 'Content-Type': 'text/html' });
+                context.res.end(body);
+            }
         }
     }
 }
