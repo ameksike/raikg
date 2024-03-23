@@ -38,18 +38,9 @@ declare class RaikgServer extends RaikgServer_base {
     runMw(mw: any, req: any, res: any): Promise<any>;
     /**
      * @description set a route
-     * @param {Object} payload
-     * @param {String} payload.route
-     * @param {String} payload.method
-     * @param {import('./types').TMiddleware} payload.handler
-     * @param {Array} payload.middlewares
+     * @param {import("./types").TRoute} payload
      */
-    set(payload: {
-        route: string;
-        method: string;
-        handler: import('./types').TMiddleware;
-        middlewares: any[];
-    }): void;
+    set(payload: import("./types").TRoute): void;
     /**
      * @description start the server
      * @param {Object} [payload]

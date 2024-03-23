@@ -6,20 +6,9 @@ declare class Router {
     store: any;
     /**
      * @description set a route
-     *
-     * @callback Handler
-     * @param {Object} [req]
-     * @param {Object} [res]
-     * @param {Function} [next]
-     *
-     * @param {Object} payload
-     * @param {String} payload.route
-     * @param {String} payload.method
-     * @param {Handler} payload.handler
-     * @param {Array} payload.middlewares
-     * @returns {Object}
+     * @param {import("./types").TRoute} payload
      */
-    set(payload: any): void;
+    set(payload: import("./types").TRoute): void;
     /**
      *
      * @param {String} key

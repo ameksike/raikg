@@ -64,11 +64,7 @@ class RaikgServer extends ksmf.server.Base {
 
     /**
      * @description set a route
-     * @param {Object} payload 
-     * @param {String} payload.route 
-     * @param {String} payload.method 
-     * @param {import('./types').TMiddleware} payload.handler 
-     * @param {Array} payload.middlewares 
+     * @param {import("./types").TRoute} payload 
      */
     set(payload) {
         this.router?.set(payload);
