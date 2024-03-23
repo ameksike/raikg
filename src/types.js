@@ -8,9 +8,9 @@
 /**
  * @typedef {Object} TRoute
  * @property {String} route
- * @property {String} method
+ * @property {String} [method]
  * @property {TMiddleware} handler
- * @property {Array<TMiddleware>} middlewares
+ * @property {Array<TMiddleware>} [middlewares]
  */
 
 module.exports = {};
